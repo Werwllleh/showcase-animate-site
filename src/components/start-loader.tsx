@@ -1,29 +1,136 @@
-import {type Dispatch, type SetStateAction, useEffect} from "react";
+import {
+  type Dispatch,
+  type SetStateAction,
+  useEffect,
+  useState,
+} from 'react';
 
+type LoaderPhase =
+  | 'initial'
+  | 'line'
+  | 'reveal'
+  | 'done';
 
-const StartLoader = ({active, setLoaderActive, timeout}: {
-  active: boolean,
-  setLoaderActive: Dispatch<SetStateAction<boolean>>,
-  timeout: number
-}) => {
+type StartLoaderProps = {
+  active: boolean;
+  setLoaderActive: Dispatch<SetStateAction<boolean>>;
+  lineDuration?: number;
+  holdDuration?: number;
+};
+
+const REVEAL_DURATION = 900;
+const LINE_FADE_DELAY = 180;
+const LINE_FADE_DURATION = 180;
+
+const StartLoader = ({
+                       active, setLoaderActive, lineDuration = 700, holdDuration = 300
+                     }: StartLoaderProps) => {
+  const [phase, setPhase] =
+    useState<LoaderPhase>('initial');
 
   useEffect(() => {
-    setTimeout(() => {
+    if (!active) {
+      return;
+    }
+
+    setPhase('initial');
+
+    const lineTimer = setTimeout(() => {
+      setPhase('line');
+    }, 50);
+
+    const revealTimer = setTimeout(() => {
+      setPhase('reveal');
+    }, 50 + lineDuration + holdDuration);
+
+    const doneTimer = setTimeout(() => {
+      setPhase('done');
       setLoaderActive(false);
-    }, timeout)
-  }, [])
+    }, 50 + lineDuration + holdDuration + REVEAL_DURATION);
+
+    return () => {
+      clearTimeout(lineTimer);
+      clearTimeout(revealTimer);
+      clearTimeout(doneTimer);
+    };
+  }, [
+    active,
+    lineDuration,
+    holdDuration,
+    setLoaderActive,
+  ]);
+
+  const revealed =
+    phase === 'reveal' ||
+    phase === 'done';
 
   return (
-    <div className={`fixed top-0 left-0 flex w-full h-full z-50 transition-opacity duration-800 ${active ? 'opacity-100' : 'opacity-0'}`}>
-      <div className="shrink relative flex-6/12 w-full h-full">
-        <span
-          className={`left-0 absolute h-full top-0 bottom-0 bg-pink-500 transition-width delay-300 ease-linear duration-800 ${active ? 'w-full' : 'w-0'}`}/>
-      </div>
-      <div className="shrink relative flex-6/12 w-full h-full">
-        <span
-          className={`right-0 absolute h-full top-0 bottom-0 bg-pink-500 transition-width delay-300 ease-linear duration-800 ${active ? 'w-full' : 'w-0'}`}/>
-      </div>
-      <span className={`absolute z-55 inset-0 m-auto w-[5px] origin-center transition-transform duration-300 bg-white ${active ? 'scale-y-0' : 'scale-y-100'}`} />
+    <div className="fixed inset-0 z-50 overflow-hidden pointer-events-none bg-transparent">
+      {/* левая штора */}
+      <div
+        className="
+          absolute
+          top-0
+          left-0
+          w-1/2
+          h-full
+          bg-pink-500
+          will-change-transform
+        "
+        style={{
+          transform: revealed
+            ? 'translateX(-100%)'
+            : 'translateX(0)',
+          transition: `transform ${REVEAL_DURATION}ms cubic-bezier(0.76, 0, 0.24, 1)`,
+        }}
+      />
+
+      {/* правая штора */}
+      <div
+        className="
+          absolute
+          top-0
+          right-0
+          w-1/2
+          h-full
+          bg-pink-500
+          will-change-transform
+        "
+        style={{
+          transform: revealed
+            ? 'translateX(100%)'
+            : 'translateX(0)',
+          transition: `transform ${REVEAL_DURATION}ms cubic-bezier(0.76, 0, 0.24, 1)`,
+        }}
+      />
+
+      {/* центральная линия */}
+      <span
+        className="absolute left-1/2 top-1/2 z-10 w-[2px] bg-white
+          -translate-x-1/2
+          -translate-y-1/2
+          origin-center
+          will-change-[height,opacity]
+        "
+        style={{
+          height:
+            phase === 'initial'
+              ? '0%'
+              : '100%',
+
+          opacity:
+            phase === 'done'
+              ? 0
+              : phase === 'reveal'
+                ? 0
+                : 1,
+
+          transition:
+            phase === 'reveal'
+              ? `opacity ${LINE_FADE_DURATION}ms linear ${LINE_FADE_DELAY}ms`
+              : `height ${lineDuration}ms cubic-bezier(0.76, 0, 0.24, 1)`,
+        }}
+      />
     </div>
   );
 };
