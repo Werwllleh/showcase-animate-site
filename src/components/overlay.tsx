@@ -6,11 +6,11 @@ const Overlay = () => {
     <motion.div
       initial="offscreen"
       whileInView="onscreen"
-      viewport={{amount: 0.1, once: true}}
+      viewport={{amount: 0.15}}
       variants={{
         offscreen: {
           // y: 0,
-          scale: 0.6
+          scale: 0.75
         },
         onscreen: {
           // y: '-100%',

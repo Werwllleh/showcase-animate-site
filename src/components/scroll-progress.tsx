@@ -5,7 +5,7 @@ const ScrollProgress = () => {
   const { scrollYProgress } = useScroll()
 
   return <motion.div
-    className="fixed top-0 left-0 right-0 h-[5px] z-10"
+    className="fixed top-0 left-0 right-0 h-1.25 z-10"
     style={{
       scaleX: scrollYProgress,
       originX: 0,

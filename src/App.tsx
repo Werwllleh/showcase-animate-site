@@ -7,6 +7,7 @@ import {useState} from "react";
 import Overlay from "./components/overlay.tsx";
 import MainProvider from "./providers/main-provider.tsx";
 import {useLenis} from "lenis/react";
+import UpCards from "./components/up-cards.tsx";
 
 function App() {
 
@@ -32,6 +33,7 @@ function App() {
       <Hero />
       <Cards />
       <Overlay />
+      <UpCards />
     </MainProvider>
   )
 }
