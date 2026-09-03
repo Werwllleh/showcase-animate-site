@@ -2,45 +2,77 @@ import {
   motion,
   MotionValue,
   useScroll,
+  useSpring,
   useTransform,
 } from "motion/react";
-import { useRef } from "react";
-import { items } from "../data.ts";
+import {useEffect, useRef, useState} from "react";
+import {items} from "../data.ts";
+
+type Size = {
+  width: number;
+  height: number;
+};
 
 type CardProps = {
   item: (typeof items)[number];
   index: number;
   progress: MotionValue<number>;
+  containerSize: Size;
+  cardSize: Size;
 };
-
-const CARD_X_OFFSET = 70;
-const CARD_Y_OFFSET = 90;
 
 const Card = ({
                 item,
                 index,
                 progress,
+                containerSize,
+                cardSize,
               }: CardProps) => {
   const total = items.length;
 
-  /*
-   * В начале вся пачка находится ниже.
-   * По мере скролла каждая карточка движется вверх,
-   * но сохраняет свой X/Y offset.
-   */
-  const start = index / (total + 2);
-  const end = Math.min(start + 0.55, 1);
+  const position = total > 1 ? index / (total - 1) : 0;
 
-  const y = useTransform(
+  const step = total > 1 ? 1 / (total - 1) : 1;
+
+  const start = index === 0 ? 0 : (index - 1) * step;
+  const end = index === 0 ? 1 : index * step;
+
+  const availableX = Math.max(0, containerSize.width - cardSize.width);
+
+  const startX = availableX * position;
+
+  /*
+   * Первая карточка уже стоит сверху.
+   *
+   * Все остальные начинаются ниже viewport.
+   */
+  const startY = index === 0 ? 0 : containerSize.height + index * 60;
+
+  const rawX = useTransform(
     progress,
     [start, end],
-    [
-      `${100 + index * 12}vh`,
-      `${index * CARD_Y_OFFSET}px`,
-    ]
+    [startX, startX]
   );
 
-  const x = index * CARD_X_OFFSET;
+  const rawY = useTransform(
+    progress,
+    [start, end],
+    index === 0
+      ? [0, 0]
+      : [startY, 0]
+  );
+
+  const x = useSpring(rawX, {
+    stiffness: 90,
+    damping: 25,
+    mass: 0.5,
+  });
+
+  const y = useSpring(rawY, {
+    stiffness: 90,
+    damping: 25,
+    mass: 0.5,
+  });
 
   return (
     <motion.div
@@ -48,86 +80,95 @@ const Card = ({
         x,
         y,
         zIndex: index + 1,
+        width: "calc(100vh - 4rem)",
       }}
-      className="
-        absolute
-        left-[12vw]
-        top-0
-        w-200
-        aspect-square
-        overflow-hidden
-        will-change-transform
-      "
+      className="absolute left-0 top-0 aspect-square overflow-hidden will-change-transform p-8"
     >
-      <div className="
-        relative
-        z-10
-        flex
-        h-full
-        flex-col
-        justify-between
-        p-8
-      ">
-        <span className="
-          text-6xl
-          font-bold
-          text-pink-500
-        ">
+      <div className="relative z-10 flex h-full flex-col justify-between">
+        <span className="text-8xl font-bold text-pink-500 opacity-80">
           {String(index + 1).padStart(2, "0")}
         </span>
 
-        <div>
-          <p className="text-3xl font-bold text-white">
-            {item.title}
-          </p>
-          <span>{item.text}</span>
+        <div className="text-white">
+          <p className="text-3xl font-bold">{item.title}</p>
+          <span className="text-2xl">{item.text}</span>
         </div>
       </div>
 
-      <img src={item.img} alt={item.title}
-        className="
-          absolute
-          inset-0
-          h-full
-          w-full
-          object-cover
-        "
-      />
+      <img src={item.img} alt={item.title} className="absolute inset-0 h-full w-full object-cover" />
     </motion.div>
   );
 };
 
 const UpCards = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const stickyRef = useRef<HTMLDivElement>(null);
+  const cardMeasureRef = useRef<HTMLDivElement>(null);
 
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: [
-      "start start",
-      "end end",
-    ],
+  const [containerSize, setContainerSize] = useState<Size>({
+    width: 0,
+    height: 0,
   });
+
+  const [cardSize, setCardSize] = useState<Size>({
+    width: 0,
+    height: 0,
+  });
+
+  const {scrollYProgress} = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end end"],
+  });
+
+  useEffect(() => {
+    const container = stickyRef.current;
+    const card = cardMeasureRef.current;
+
+    if (!container || !card) return;
+
+    const updateSizes = () => {
+      setContainerSize({
+        width: container.clientWidth,
+        height: container.clientHeight,
+      });
+
+      setCardSize({
+        width: card.offsetWidth,
+        height: card.offsetHeight,
+      });
+    };
+
+    updateSizes();
+
+    const resizeObserver = new ResizeObserver(updateSizes);
+
+    resizeObserver.observe(container);
+    resizeObserver.observe(card);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, []);
 
   return (
     <section
       ref={sectionRef}
-      className="
-        relative
-        h-[500vh]
-      "
+      className="relative"
+      style={{
+        height: `${100 + (items.length - 1) * 100}vh`,
+      }}
     >
-      <div className="
-        sticky
-        top-0
-        h-dvh
-        overflow-hidden
-      ">
+      <div ref={stickyRef} className="sticky top-0 h-dvh overflow-hidden">
+        <div ref={cardMeasureRef} aria-hidden="true" className="pointer-events-none invisible absolute left-0 top-0 aspect-square" style={{width: "calc(100vh - 4rem)"}} />
+
         {items.map((item, index) => (
           <Card
             key={index}
             item={item}
             index={index}
             progress={scrollYProgress}
+            containerSize={containerSize}
+            cardSize={cardSize}
           />
         ))}
       </div>
