@@ -36,7 +36,7 @@ function App() {
       <Cards />
       <Overlay />
       <UpCards />
-      <VideoBlock src={"./assets/video/iceland_video.webm"} poster={"https://d2rdhxfof4qmbb.cloudfront.net/wp-content/uploads/20180512175013/Iceland1.jpg"} />
+      <VideoBlock src={"./assets/video/iceland_video.webm"} poster={"./assets/image/1.webp"} />
       <Advantages />
     </MainProvider>
   )

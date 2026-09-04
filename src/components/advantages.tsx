@@ -5,44 +5,45 @@ import {
   useTransform,
 } from "motion/react";
 import {useRef} from "react";
+import * as React from "react";
 
 type IAdvantagesItem = {
-  title: string;
+  title: React.ReactNode;
   text: string;
   image: string;
 };
 
 const advantagesItems: IAdvantagesItem[] = [
   {
-    title: "Страна льда и огня: 600 горячих источников",
+    title: <>Страна льда и&nbsp;огня: 600 горячих источников</>,
     text: "Несмотря на название, Исландия — это геотермальный рай. На острове расположено более 600 горячих источников, а также действующие вулканы и гейзеры. Благодаря этому около 90% домов в стране отапливаются за счет возобновляемой геотермальной энергии.",
-    image: "https://lp-cms-production.imgix.net/2019-06/925b148cc33035bccdcf2205e6ce4b626974f40283b05d61439cd03e156f7d8b.jpg"
+    image: "./assets/image/1.webp"
   },
   {
-    title: "Отсутствие постоянной армии",
+    title: <>Отсутствие постоянной армии</>,
     text: "Исландия — одна из немногих стран в мире, у которой нет регулярной армии, флота или военно-воздушных сил. С момента обретения независимости страна придерживается политики нейтралитета и демилитаризации, полагаясь на дипломатию и международные соглашения.",
-    image: "https://livingheritage.ru/photos/brand/3692.jpg"
+    image: "./assets/image/2.webp"
   },
   {
-    title: "Самая высокая плотность писателей на душу населения",
+    title: <>Самая высокая плотность писателей на&nbsp;душу населения</>,
     text: "Исландия занимает первое место в мире по количеству публикуемых книг на одного жителя. В стране с населением всего около 370 000 человек ежегодно издается более 1000 новых названий.",
-    image: "https://upload.wikimedia.org/wikipedia/commons/4/4e/2010-10-07_20-26-46_Wrangel_Boris.jpg"
+    image: "./assets/image/3.webp"
   },
   {
-    title: "Здесь нет комаров",
+    title: <>Здесь нет комаров</>,
     text: "Исландия — одна из немногих обитаемых территорий на Земле, где полностью отсутствуют комары. Ученые связывают это с уникальным климатом: быстрые перепады температур между замерзанием и оттаиванием не позволяют личинкам комаров завершить цикл развития.",
-    image: "http://nature.kremlin.ru/media/photo/1024x576_2x/Pjb1GE7xN1zEowffPdy31UJbR7BstGSG.jpg"
+    image: "./assets/image/4.webp"
   },
   {
-    title: "Страна без фамилий в привычном понимании",
+    title: <>Страна без&nbsp;фамилий в&nbsp;привычном понимании</>,
     text: "В Исландии действует уникальная система именования: у большинства жителей нет семейных фамилий. Вместо этого используется патроним (или матроним) — к имени ребенка добавляется имя отца (или матери) с окончанием -son (сын) для мальчиков и -dóttir (дочь) для девочек.",
-    image: "https://avatars.mds.yandex.net/i?id=690b92f8597cd5cacfdc5c83377cdb21_l-11008180-images-thumbs&n=13"
+    image: "./assets/image/5.webp"
   },
 
   {
-    title: "Единственное место в мире, где можно увидеть тупиков на суше",
+    title: <>Единственное место в&nbsp;мире, где можно увидеть тупиков на&nbsp;суше</>,
     text: "Исландия является домом для крупнейшей в мире колонии атлантических тупиков (около 60% от всей мировой популяции). Эти яркие птицы с разноцветными клювами гнездятся на скалистых берегах острова, особенно на западных фьордах и полуострове Вестфирдир.",
-    image: "https://globatur.travel/wp-content/uploads/2026/02/islandia-1.jpg"
+    image: "./assets/image/6.webp"
   },
 ];
 
@@ -81,7 +82,7 @@ const AdvantagesItem = ({title, text, image, index, progress}: IAdvantagesItem &
       <h4 className="text-center font-bold text-3xl text-gray-200">{title}</h4>
       <p className="relative z-10 text-[1rem]/[1.2] text-gray-200 font-light">{text}</p>
       {image && (
-        <img loading="lazy" className="absolute -z-1 top-0 left-0 w-full h-full object-cover object-center opacity-35 backdrop-blur-sm" src={image} alt={title} />
+        <img loading="lazy" className="absolute -z-1 top-0 left-0 w-full h-full object-cover object-center opacity-35 backdrop-blur-sm" src={image} alt={`${title}`} />
       )}
     </motion.div>
   );
@@ -105,7 +106,7 @@ const Advantages = () => {
     <div ref={sectionRef} className="relative z-20 h-[400vh]">
       <div className="sticky top-0 h-dvh overflow-hidden">
         <motion.div style={{y}} className="absolute inset-0 bg-black/75 flex flex-col justify-center">
-          <div className="grid grid-cols-3 max-w-[90%] max-h-[90%] items-stretch gap-4 w-full mx-auto">
+          <div className="grid grid-cols-3 max-w-360  max-h-[90%] items-stretch gap-4 w-full mx-auto">
             {advantagesItems.map((item, index) => (
               <AdvantagesItem key={index} {...item} index={index} progress={scrollYProgress} />
             ))}

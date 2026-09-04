@@ -7,7 +7,7 @@ const Hero = () => {
       </div>
       <div className="absolute -z-0 inset-0 w-full h-full shading">
         <img fetchPriority="high"
-             src="https://globatur.travel/wp-content/uploads/2026/02/islandia-1.jpg"
+             src="./assets/image/6.webp"
              alt="Hero banner"
              className="w-full h-full object-cover"
         />
