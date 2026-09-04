@@ -11,7 +11,7 @@ const Cards = () => {
   const containerRef = useRef<HTMLDivElement | null>(null)
   const stickyRef = useRef<HTMLDivElement | null>(null)
 
-  const isDesktop = useMediaQuery("(max-width: 1024px)");
+  const isDesktop = useMediaQuery("(min-width: 1024px)");
 
   const [viewportWidth, setViewportWidth] = useState<number>(0);
   const [cardWidth, setCardWidth] = useState<number>(0);
@@ -38,7 +38,7 @@ const Cards = () => {
     return () => {
       window.removeEventListener("resize", updateWidth)
     }
-  }, [])
+  }, [isDesktop])
 
   const totalWidth = items.length * cardWidth + (items.length - 1) * GAP
 
@@ -53,14 +53,16 @@ const Cards = () => {
     [0, -maxTranslate]
   )
 
+
   return (
     <div
       ref={containerRef}
-      className="relative h-[400vh]"
+      style={{height: `calc(100dvh + ${maxTranslate}px)`}}
+      className="relative"
     >
       <div
         ref={stickyRef}
-        className="sticky top-0 h-dvh w-full overflow-hidden"
+        className={`sticky top-0 w-full overflow-hidden h-dvh`}
       >
         <motion.div
           className="flex h-full items-stretch will-change-transform"
