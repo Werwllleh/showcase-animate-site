@@ -1,16 +1,20 @@
 import {motion, useScroll, useTransform} from "motion/react"
 import {useEffect, useRef, useState} from "react"
 import {items} from "../data.ts";
+import {useMediaQuery} from "../hooks/useMediaQuery.ts";
 
 const TAILWIND_UNIT: number = 4
-const ITEM_WIDTH: number = 240 * TAILWIND_UNIT
+
 const GAP: number = 2.5 * TAILWIND_UNIT
 
 const Cards = () => {
   const containerRef = useRef<HTMLDivElement | null>(null)
   const stickyRef = useRef<HTMLDivElement | null>(null)
 
-  const [viewportWidth, setViewportWidth] = useState(0)
+  const isDesktop = useMediaQuery("(max-width: 1024px)");
+
+  const [viewportWidth, setViewportWidth] = useState<number>(0);
+  const [cardWidth, setCardWidth] = useState<number>(0);
 
   const {scrollYProgress} = useScroll({
     target: containerRef,
@@ -21,7 +25,10 @@ const Cards = () => {
     const updateWidth = () => {
       if (!stickyRef.current) return
 
-      setViewportWidth(stickyRef.current.clientWidth)
+      const viewportWidthSize = stickyRef.current.clientWidth;
+
+      setViewportWidth(viewportWidthSize)
+      setCardWidth(isDesktop ? 240 * TAILWIND_UNIT : viewportWidthSize * 0.9)
     }
 
     updateWidth()
@@ -33,9 +40,7 @@ const Cards = () => {
     }
   }, [])
 
-  const totalWidth =
-    items.length * ITEM_WIDTH +
-    (items.length - 1) * GAP
+  const totalWidth = items.length * cardWidth + (items.length - 1) * GAP
 
   const maxTranslate = Math.max(
     0,
@@ -67,8 +72,8 @@ const Cards = () => {
           {items.map((item, index) => (
             <div
               key={index}
-              className="relative flex h-full shrink-0 flex-col items-center justify-center text-white shading"
-              style={{width: ITEM_WIDTH}}
+              className={`relative flex aspect-square shrink-0 flex-col items-center justify-center text-white shading`}
+              style={{width: cardWidth}}
             >
               <h4 className="font-bold text-2xl">
                 {item.title}

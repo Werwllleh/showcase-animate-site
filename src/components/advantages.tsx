@@ -6,6 +6,7 @@ import {
 } from "motion/react";
 import {useRef} from "react";
 import * as React from "react";
+import {useMediaQuery} from "../hooks/useMediaQuery.ts";
 
 type IAdvantagesItem = {
   title: React.ReactNode;
@@ -47,9 +48,10 @@ const advantagesItems: IAdvantagesItem[] = [
   },
 ];
 
-const AdvantagesItem = ({title, text, image, index, progress}: IAdvantagesItem & {
+const AdvantagesItem = ({title, text, image, index, progress, animated}: IAdvantagesItem & {
   index: number;
   progress: MotionValue<number>;
+  animated: boolean;
 }) => {
   const total = advantagesItems.length;
 
@@ -76,7 +78,10 @@ const AdvantagesItem = ({title, text, image, index, progress}: IAdvantagesItem &
 
   return (
     <motion.div
-      style={{opacity, y}}
+      style={{
+        opacity: animated ? opacity : 1,
+        y: animated ? y : 0,
+      }}
       className={`relative flex flex-col gap-12 justify-between bg-white/15 rounded-2xl min-h-70 p-8 backdrop-blur-sm overflow-hidden shading`}
     >
       <h4 className="text-center font-bold text-3xl text-gray-200">{title}</h4>
@@ -91,6 +96,8 @@ const AdvantagesItem = ({title, text, image, index, progress}: IAdvantagesItem &
 const Advantages = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
 
+  const isDesktop = useMediaQuery("(min-width: 1280px)");
+
   const {scrollYProgress} = useScroll({
     target: sectionRef,
     offset: ["start start", "end end"],
@@ -103,12 +110,12 @@ const Advantages = () => {
   );
 
   return (
-    <div ref={sectionRef} className="relative z-20 h-[400vh]">
-      <div className="sticky top-0 h-dvh overflow-hidden">
-        <motion.div style={{y}} className="absolute inset-0 bg-black/75 flex flex-col justify-center">
-          <div className="grid grid-cols-3 max-w-360  max-h-[90%] items-stretch gap-4 w-full mx-auto">
+    <div ref={sectionRef} className={isDesktop ? "relative z-20 h-[400vh]" : "relative z-20"}>
+      <div className={isDesktop ? "sticky top-0 h-dvh overflow-hidden" : "relative"}>
+        <motion.div style={{y: isDesktop ? y : 0}} className={isDesktop ? "absolute inset-0 bg-black/75 flex flex-col justify-center px-5 py-20" : "relative bg-black/75 py-40"}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 max-w-360  max-h-[90%] items-stretch gap-4 w-full mx-auto">
             {advantagesItems.map((item, index) => (
-              <AdvantagesItem key={index} {...item} index={index} progress={scrollYProgress} />
+              <AdvantagesItem key={index} {...item} index={index} progress={scrollYProgress} animated={isDesktop} />
             ))}
           </div>
         </motion.div>

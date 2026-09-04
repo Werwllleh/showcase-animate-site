@@ -7,6 +7,7 @@ import {
 } from "motion/react";
 import {useEffect, useRef, useState} from "react";
 import {items} from "../data.ts";
+import {useMediaQuery} from "../hooks/useMediaQuery.ts";
 
 type Size = {
   width: number;
@@ -30,6 +31,8 @@ const Card = ({
               }: CardProps) => {
   const total = items.length;
 
+  const isDesktop = useMediaQuery("(min-width: 1280px)");
+
   const position = total > 1 ? index / (total - 1) : 0;
 
   const step = total > 1 ? 1 / (total - 1) : 1;
@@ -39,13 +42,8 @@ const Card = ({
 
   const availableX = Math.max(0, containerSize.width - cardSize.width);
 
-  const startX = availableX * position;
+  const startX = isDesktop ? availableX * position : 0;
 
-  /*
-   * Первая карточка уже стоит сверху.
-   *
-   * Все остальные начинаются ниже viewport.
-   */
   const startY = index === 0 ? 0 : containerSize.height + index * 60;
 
   const rawX = useTransform(
@@ -80,9 +78,8 @@ const Card = ({
         x,
         y,
         zIndex: index + 1,
-        width: "calc(100vh - 4rem)",
       }}
-      className="absolute left-0 top-0 aspect-square overflow-hidden will-change-transform p-8"
+      className={`absolute left-0 top-0 aspect-square overflow-hidden will-change-transform p-8  ${isDesktop ? "w-[calc(100vh-4rem)]" : "w-full"}`}
     >
       <div className="relative z-10 flex h-full flex-col justify-between">
         <span className="text-8xl font-bold text-pink-500 opacity-80">
