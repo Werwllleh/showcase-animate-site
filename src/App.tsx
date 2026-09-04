@@ -10,6 +10,7 @@ import {useLenis} from "lenis/react";
 import UpCards from "./components/up-cards.tsx";
 import Advantages from "./components/advantages.tsx";
 import VideoBlock from "./components/video-block.tsx";
+import Feedback from "./components/feedback.tsx";
 
 function App() {
 
@@ -38,6 +39,7 @@ function App() {
       <UpCards />
       <VideoBlock src={"./assets/video/iceland_video.webm"} poster={"./assets/image/1.webp"} />
       <Advantages />
+      <Feedback />
     </MainProvider>
   )
 }

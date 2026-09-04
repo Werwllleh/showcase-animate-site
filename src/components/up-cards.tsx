@@ -166,7 +166,7 @@ const UpCards = () => {
   }, []);
 
   return (
-    <section
+    <div
       ref={sectionRef}
       className="relative"
       style={{
@@ -188,7 +188,7 @@ const UpCards = () => {
           />
         ))}
       </div>
-    </section>
+    </div>
   );
 };
 
