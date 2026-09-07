@@ -6,7 +6,7 @@ const Feedback = () => {
   return (
     <div
       className="relative min-h-dvh  flex flex-col justify-center before:content-[''] before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-olive-900/50 before:z-1 before:backdrop-blur-[3px]">
-      <div className="relative z-2 py-20 max-w-337.5 mx-auto px-10">
+      <div className="relative z-2 py-20 max-w-337.5 mx-auto px-5 sm:px-10">
         <div className="grid grid-cols-1 xl:grid-cols-[minmax(300px,.7fr)_minmax(0,1fr)] gap-8 xl:gap-16 items-stretch">
           <motion.div
             transition={{type: spring}}
@@ -24,10 +24,10 @@ const Feedback = () => {
             }}
             className="flex flex-col items-center gap-4"
           >
-            <h4 className="text-3xl/normal text-white xl:text-4xl/normal font-bold">
+            <h4 className="text-2xl/normal sm:text-3xl/normal text-white xl:text-4xl/normal font-bold">
               Создадим ваше идеальное путешествие в&nbsp;<span className="uppercase">Исландию</span>
             </h4>
-            <p className="text-xl/normal font-extralight text-white max-w-3xl mx-auto mt-4 leading-relaxed">
+            <p className="sm:text-xl/normal font-extralight text-white mt-4 leading-relaxed">
               Исландия&nbsp;&mdash; это не&nbsp;просто точка на&nbsp;карте, а&nbsp;мир контрастов.
               Мы поможем вам увидеть северное сияние, искупаться в&nbsp;геотермальных источниках
               и&nbsp;пройти по&nbsp;черным пляжам. Заполните форму, чтобы получить уникальный маршрут,
