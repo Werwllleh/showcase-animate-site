@@ -11,6 +11,7 @@ import UpCards from "./components/up-cards.tsx";
 import Advantages from "./components/advantages.tsx";
 import VideoBlock from "./components/video-block.tsx";
 import Feedback from "./components/feedback.tsx";
+import Footer from "./components/footer.tsx";
 
 function App() {
 
@@ -26,20 +27,23 @@ function App() {
 
   return (
     <MainProvider>
-      <StartLoader
-        active={loaderActive}
-        setLoaderActive={setLoaderActive}
-        lineDuration={700}
-        holdDuration={300}
-      />
-      <ScrollProgress />
-      <Hero />
-      <Cards />
-      <Overlay />
-      <UpCards />
-      <VideoBlock src={"./assets/video/iceland_video.webm"} poster={"./assets/image/1.webp"} />
-      <Advantages />
-      <Feedback />
+      <main className="flex-1">
+        <StartLoader
+          active={loaderActive}
+          setLoaderActive={setLoaderActive}
+          lineDuration={700}
+          holdDuration={300}
+        />
+        <ScrollProgress/>
+        <Hero/>
+        <Cards/>
+        <Overlay/>
+        <UpCards/>
+        <VideoBlock src={"./assets/video/iceland_video.webm"} poster={"./assets/image/1.webp"}/>
+        <Advantages/>
+        <Feedback/>
+      </main>
+      <Footer/>
     </MainProvider>
   )
 }

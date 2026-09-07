@@ -74,7 +74,10 @@ html {
   overflow-x: clip;
 }
 
-#root {}
+#root {
+  display: flex;
+  flex-direction: column;
+}
 
 body {
   margin: 0;
