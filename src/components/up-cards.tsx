@@ -92,10 +92,9 @@ const Card = ({
         zIndex: index + 1,
         width: isDesktop
           ? "calc(100vh - 4rem)"
-          : "calc(100% - 4rem)",
-        height: "calc(100vh - 4rem)",
+          : "100%",
       }}
-      className={`absolute left-0 top-0 aspect-square overflow-hidden will-change-transform p-8  ${isDesktop ? "w-[calc(100vh-4rem)]" : "w-[calc(100%-4rem)]"}`}
+      className={`absolute left-0 top-0 h-full overflow-hidden will-change-transform p-8`}
     >
       <div className="relative z-10 flex h-full flex-col justify-between">
         <span className="text-5xl md:text-8xl xl:text-10xl font-bold text-pink-500 opacity-80">
@@ -117,8 +116,6 @@ const UpCards = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const stickyRef = useRef<HTMLDivElement>(null);
   const cardMeasureRef = useRef<HTMLDivElement>(null);
-
-  // const isDesktop = useMediaQuery("(min-width: 1024px)");
 
   const [containerSize, setContainerSize] = useState<Size>({
     width: 0,

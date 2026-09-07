@@ -1,9 +1,32 @@
-@import "tailwindcss";
-
 @layer theme, base, components, utilities;
 @import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/preflight.css" layer(base);
 @import "tailwindcss/utilities.css" layer(utilities);
+
+@font-face {
+  font-family: 'DM Sans';
+  src: url('assets/fonts/DMSans18pt-ExtraLight.woff2') format('woff2');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  src: url('assets/fonts/DMSans24pt-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  src: url('assets/fonts/DMSans24pt-SemiBold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 
 :root {
   --primary: #005cc1;
@@ -45,18 +68,17 @@
   }
 }
 
-* {
-  box-sizing: content-box;
-}
-
 html {
-  overflow-x: hidden;
+  font-family: "DM Sans", sans-serif;
+  font-weight: 400;
+  overflow-x: clip;
 }
 
 #root {}
 
 body {
   margin: 0;
+  overflow-x: clip;
 }
 
 input, textarea {
